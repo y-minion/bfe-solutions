@@ -30,4 +30,23 @@ They still have the same interfaces, and internally keep track of the timing for
 </li>
 </ol>
 <p>Some code like below is used to test your implementation.</p>
-<pre class="shiki github-dark shaku" style="background-color:#24292e;color:#e1e4e8" tabindex="0"><code><span class="line"><span style="color:#F97583">let</span><span style="color:#E1E4E8"> currentTime </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span></span><span class="line"></span><span class="line"><span style="color:#F97583">const</span><span style="color:#B392F0"> run</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> (</span><span style="color:#FFAB70">input</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span><span class="line"><span style="color:#E1E4E8">  currentTime </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span></span><span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> calls</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> []</span></span><span class="line"></span><span class="line"><span style="color:#F97583">  const</span><span style="color:#B392F0"> func</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> (</span><span style="color:#FFAB70">arg</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span><span class="line"><span style="color:#E1E4E8">     calls.</span><span style="color:#B392F0">push</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`${</span><span style="color:#E1E4E8">arg</span><span style="color:#9ECBFF">}@${</span><span style="color:#E1E4E8">currentTime</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">)</span></span><span class="line"><span style="color:#E1E4E8">  }</span></span><span class="line"></span><span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> throttled</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> throttle</span><span style="color:#E1E4E8">(func, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">)</span></span><span class="line"><span style="color:#E1E4E8">  input.</span><span style="color:#B392F0">forEach</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">call</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span><span class="line"><span style="color:#F97583">     const</span><span style="color:#E1E4E8"> [</span><span style="color:#79B8FF">arg</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">time</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> call.</span><span style="color:#B392F0">split</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'@'</span><span style="color:#E1E4E8">)</span></span><span class="line"><span style="color:#B392F0">     setTimeout</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=&gt;</span><span style="color:#B392F0"> throttled</span><span style="color:#E1E4E8">(arg), time)</span></span><span class="line"><span style="color:#E1E4E8">  })</span></span><span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> calls</span></span><span class="line"><span style="color:#E1E4E8">}</span></span><span class="line"></span><span class="line"><span style="color:#B392F0">expect</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">run</span><span style="color:#E1E4E8">([</span><span style="color:#9ECBFF">'A@0'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'B@2'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'C@3'</span><span style="color:#E1E4E8">])).</span><span style="color:#B392F0">toEqual</span><span style="color:#E1E4E8">([</span><span style="color:#9ECBFF">'A@0'</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">'C@3'</span><span style="color:#E1E4E8">])</span></span></code></pre>
+<pre><code>let currentTime = 0
+
+const run = (input) =&gt; {
+  currentTime = 0
+  const calls = []
+
+  const func = (arg) =&gt; {
+     calls.push(`${arg}@${currentTime}`)
+  }
+
+  const throttled = throttle(func, 3)
+  input.forEach((call) =&gt; {
+     const [arg, time] = call.split('@')
+     setTimeout(() =&gt; throttled(arg), time)
+  })
+  return calls
+}
+
+expect(run(['A@0', 'B@2', 'C@3'])).toEqual(['A@0', 'C@3'])
+</code></pre>
