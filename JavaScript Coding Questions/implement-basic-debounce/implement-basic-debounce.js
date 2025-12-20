@@ -6,32 +6,17 @@
  * @returns {(...args: any[]) => any}
  */
 function debounce(func, wait) {
-  let isCooling = true;
   let timerId = null;
-  let lastArg = null;
 
   //딜레이 함수 호출시 타이머 아이디 초기화
-  const cooling = () => {
+  const cooling = (arg) => {
     timerId = setTimeout(() => {
-      isCooling = false;
-      if (lastArg) {
-        func(lastArg); //밀렸던 함수 실행
-        isCooling = true;
-        lastArg = null;
-        cooling();
-      }
+      func(arg); //밀렸던 함수 실행
     }, wait);
   };
 
   return (arg) => {
-    if (isCooling) {
-      lastArg = arg;
-      clearTimeout(timerId);
-      cooling(); //딜레이 초기화
-    } else {
-      func(arg);
-      isCooling = true;
-      cooling();
-    }
+    clearTimeout(timerId);
+    cooling(arg);
   };
 }
